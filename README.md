@@ -22,4 +22,4 @@ Nuestras ideas son:
 
 (![aca chicas anime](https://static.wikia.nocookie.net/megamitensei/images/b/be/An_takamaki.png/revision/latest?cb=20190624190416&path-prefix=es))
 
-
+(![chicas anime](https://static.wikia.nocookie.net/megamitensei/images/7/77/P5_Haru_Okumura.png/revision/latest?cb=20191017203721&path-prefix=es))
