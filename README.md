@@ -17,7 +17,6 @@ Nuestras ideas son:
 
 * _Sistema de journal_: ver los logs que se escribieron junto a la fecha, ver en que fecha se agregaron las canciones a la aplicación.
 
-(![logoproyecto](https://ibb.co/PZT0Bcfx))
 
 (![aca chicas anime](https://static.wikia.nocookie.net/megamitensei/images/9/95/P5_Futaba_Sakura.png/revision/latest?cb=20191016035405&path-prefix=es))
 
