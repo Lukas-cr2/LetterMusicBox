@@ -24,4 +24,12 @@ Nuestras ideas son:
 
 ![chicas anime](https://static.wikia.nocookie.net/megamitensei/images/7/77/P5_Haru_Okumura.png/revision/latest?cb=20191017203721&path-prefix=es)
 
-![logo](file:///C:/Users/PC-05/Downloads/LetterMusicBox%20logo.png)
+![chicas anime](https://static.wikia.nocookie.net/megamitensei/images/a/af/P5_Makoto_Nijima.png/revision/latest/scale-to-width-down/175?cb=20190810035653&path-prefix=es)
+
+![chicas anime](https://static.wikia.nocookie.net/megamitensei/images/c/c6/Persona_5_Royal_Kasumi.png/revision/latest?cb=20190424131819)
+
+![chicas anime](https://static.wikia.nocookie.net/megamitensei/images/e/eb/P5_Tae_Takemi.png/revision/latest?cb=20161220150151)
+
+![chicas anime](https://static.wikia.nocookie.net/megamitensei/images/4/43/Sadayo_Kawakami.png/revision/latest?cb=20161220030038)
+
+![chicas anime](https://static.wikia.nocookie.net/megamitensei/images/6/63/Persona_5_Hero.png/revision/latest/scale-to-width-down/1000?cb=20240407105006)
