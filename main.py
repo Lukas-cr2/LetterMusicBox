@@ -82,6 +82,30 @@ class BibliotecaMusical:
         ttk.Button(acciones, text="Eliminar seleccionada", command=self.eliminar_cancion).pack(side="left", padx=(0, 8))
         ttk.Button(acciones, text="Limpiar", command=self.limpiar_formulario).pack(side="left")
 
+        calificacion_frame = ttk.Frame(formulario)
+        calificacion_frame.grid(row=2, column=4, sticky="w", pady=(10, 0), padx=(16, 0))
+        ttk.Label(calificacion_frame, text="Calificación:").pack(side="left", padx=(0, 8))
+        self.calificacion = tk.DoubleVar(value=0.0)
+        self.botones_estrellas = []
+
+        for indice in range(10):
+            valor = (indice + 1) / 2
+            boton = tk.Button(
+                calificacion_frame,
+                text="☆",
+                width=2,
+                relief="flat",
+                borderwidth=1,
+                font=("TkDefaultFont", 12, "bold"),
+                command=lambda valor=valor: self._set_calificacion(valor),
+            )
+            boton.pack(side="left", padx=1)
+            self.botones_estrellas.append(boton)
+
+        self.calificacion_label = ttk.Label(calificacion_frame, text="0.0 / 5")
+        self.calificacion_label.pack(side="left", padx=(10, 0))
+        self._actualizar_estrellas()
+
         filtros = ttk.Frame(contenedor)
         filtros.pack(fill="x", pady=(0, 10))
         ttk.Label(filtros, text="Buscar:").pack(side="left", padx=(0, 7))
@@ -131,7 +155,25 @@ class BibliotecaMusical:
             "artista": artista,
             "genero": self.genero.get(),
             "log": self.entrada_log.get("1.0", "end").strip(),
+            "calificacion": float(self.calificacion.get()),
         }
+
+    def _set_calificacion(self, valor):
+        self.calificacion.set(valor)
+        self._actualizar_estrellas()
+
+    def _actualizar_estrellas(self):
+        valor_actual = float(self.calificacion.get())
+        self.calificacion_label.configure(text=f"{valor_actual:.1f} / 5")
+
+        for indice, boton in enumerate(self.botones_estrellas):
+            valor_estrella = (indice + 1) / 2
+            if valor_actual >= valor_estrella:
+                boton.configure(text="★", bg="#fff7ed", fg="#fbbf24", relief="solid")
+            elif valor_actual >= valor_estrella - 0.5:
+                boton.configure(text="⯨", bg="#fff7ed", fg="#fbbf24", relief="solid")
+            else:
+                boton.configure(text="☆", bg="#f8fafc", fg="#cbd5e1", relief="flat")
 
     def agregar_cancion(self):
         datos = self._datos_formulario()
@@ -225,6 +267,8 @@ class BibliotecaMusical:
         self.genero.set(cancion.get("genero", GENEROS[0]))
         self.entrada_log.delete("1.0", "end")
         self.entrada_log.insert("1.0", cancion.get("log", ""))
+        self.calificacion.set(float(cancion.get("calificacion", 0.0)))
+        self._actualizar_estrellas()
         self.estado.set("Canción seleccionada: edita sus datos y tocaq en guardar.")
 
     def limpiar_formulario(self):
@@ -234,6 +278,8 @@ class BibliotecaMusical:
         self.entrada_artista.delete(0, "end")
         self.genero.set(GENEROS[0])
         self.entrada_log.delete("1.0", "end")
+        self.calificacion.set(0.0)
+        self._actualizar_estrellas()
         self.entrada_nombre.focus_set()
 
     def _mostrar_error_db(self, error):
