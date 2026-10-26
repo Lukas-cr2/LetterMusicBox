@@ -1,6 +1,14 @@
 ## LetterMusicBox
 # Catalogo de Musica
 
+## Ejecutar la aplicación
+
+1. Instala las dependencias con `python -m pip install -r requirements.txt`.
+2. Inicia MongoDB local.
+3. Ejecuta `python main.py`.
+
+Las portadas elegidas se copian a la carpeta `covers/`; MongoDB guarda la ruta de cada imagen junto a la canción. Esa carpeta contiene archivos locales y no se incluye en Git.
+
 _hola profe como anda? este es nuestro repositorio github_
 
 _nuestro plan es hacer __LetterMusicBox__ asi que veamos como va_
@@ -25,6 +33,11 @@ _Cambios 23/10_
 * _Agregamos chicas anime_
 * _Agregamos el sistema de busqueda por tags y por nombre_
 * _Agregamos la tabla para visualizar el contenido de la base de datos_
+
+_Cambios 26/10_
+* _Agregamos la funcion de estrellas_
+* _Agregamos el logo de la aplicacion_
+* _reacomodamos ligeramente la interfaz_
 
 
 ![aca chicas anime](https://static.wikia.nocookie.net/megamitensei/images/9/95/P5_Futaba_Sakura.png/revision/latest?cb=20191016035405&path-prefix=es)

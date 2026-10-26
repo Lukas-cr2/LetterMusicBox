@@ -1,7 +1,11 @@
 import re
+import shutil
+import uuid
+from pathlib import Path
 import tkinter as tk
-from tkinter import messagebox, ttk
+from tkinter import filedialog, messagebox, ttk
 
+from PIL import Image, ImageTk
 from pymongo import MongoClient
 from pymongo.errors import PyMongoError, ServerSelectionTimeoutError
 from bson import ObjectId
@@ -17,10 +21,12 @@ class BibliotecaMusical:
     def __init__(self, root):
         self.root = root
         self.root.title("LetterMusicBox | Mejor que ayer")
-        self.root.geometry("1000x750")
+        self.root.geometry("1400x900")
         self.root.minsize(760, 560)
         self.root.configure(bg="#f3f5f9")
         self.cancion_seleccionada = None
+        self.imagen_seleccionada = None
+        self.portada_photo = None
 
         # MongoDB se ejecuta localmente y esto lo hizo la ia asi que no lo toquen
         self.cliente = MongoClient(MONGODB_URI, serverSelectionTimeoutMS=2000)
@@ -46,12 +52,24 @@ class BibliotecaMusical:
         contenedor = ttk.Frame(self.root, padding=22)
         contenedor.pack(fill="both", expand=True)
 
-        ttk.Label(contenedor, text="LetterMusicBox", style="Titulo.TLabel").pack(anchor="w")
+        encabezado = ttk.Frame(contenedor)
+        encabezado.pack(fill="x", pady=(0, 18))
+        texto_encabezado = ttk.Frame(encabezado)
+        texto_encabezado.pack(side="left", anchor="w")
+        ttk.Label(texto_encabezado, text="LetterMusicBox", style="Titulo.TLabel").pack(anchor="w")
         ttk.Label(
-            contenedor,
+            texto_encabezado,
             text="Como letterbox, pero para musica",
             style="Subtitulo.TLabel",
-        ).pack(anchor="w", pady=(2, 18))
+        ).pack(anchor="w", pady=(2, 0))
+
+        ruta_logo = Path(__file__).with_name("logo.png")
+        self.logo_img = None
+        if ruta_logo.is_file():
+            imagen_logo = tk.PhotoImage(file=str(ruta_logo))
+            factor = max(1, (imagen_logo.width() + 139) // 140, (imagen_logo.height() + 139) // 140)
+            self.logo_img = imagen_logo.subsample(factor, factor)
+            ttk.Label(encabezado, image=self.logo_img).pack(side="right", anchor="e")
 
         formulario = ttk.LabelFrame(contenedor, text="Datos de la canción", padding=14)
         formulario.pack(fill="x", pady=(0, 14))
@@ -83,26 +101,54 @@ class BibliotecaMusical:
         ttk.Button(acciones, text="Limpiar", command=self.limpiar_formulario).pack(side="left")
 
         calificacion_frame = ttk.Frame(formulario)
-        calificacion_frame.grid(row=2, column=4, sticky="w", pady=(10, 0), padx=(16, 0))
-        ttk.Label(calificacion_frame, text="Calificación:").pack(side="left", padx=(0, 8))
+        calificacion_frame.grid(row=2, column=4, sticky="w", pady=(10, 0), padx=(12, 0))
+        self.portada_canvas = tk.Canvas(
+            calificacion_frame,
+            width=140,
+            height=140,
+            bg="#ffffff",
+            highlightthickness=1,
+            highlightbackground="#cbd5e1",
+        )
+        self.portada_canvas.pack(anchor="w")
+        self._mostrar_portada(None)
+        ttk.Button(
+            calificacion_frame,
+            text="Elegir portada",
+            command=self.seleccionar_portada,
+        ).pack(anchor="w", pady=(5, 0))
+
+        controles_calificacion = ttk.Frame(calificacion_frame)
+        controles_calificacion.pack(anchor="w", pady=(8, 0))
+        ttk.Label(controles_calificacion, text="Calificación:").pack(side="left", padx=(0, 6))
         self.calificacion = tk.DoubleVar(value=0.0)
+        tk.Button(
+            controles_calificacion,
+            text="0",
+            width=1,
+            padx=1,
+            pady=1,
+            command=lambda: self._set_calificacion(0.0),
+        ).pack(side="left", padx=(0, 3))
         self.botones_estrellas = []
 
-        for indice in range(10):
-            valor = (indice + 1) / 2
+        for indice in range(5):
             boton = tk.Button(
-                calificacion_frame,
+            controles_calificacion,
                 text="☆",
                 width=2,
                 relief="flat",
                 borderwidth=1,
                 font=("TkDefaultFont", 12, "bold"),
-                command=lambda valor=valor: self._set_calificacion(valor),
+            )
+            boton.bind(
+                "<Button-1>",
+                lambda evento, indice=indice: self._calificar_estrella(evento, indice),
             )
             boton.pack(side="left", padx=1)
             self.botones_estrellas.append(boton)
 
-        self.calificacion_label = ttk.Label(calificacion_frame, text="0.0 / 5")
+        self.calificacion_label = ttk.Label(controles_calificacion, text="0.0 / 5")
         self.calificacion_label.pack(side="left", padx=(10, 0))
         self._actualizar_estrellas()
 
@@ -125,16 +171,16 @@ class BibliotecaMusical:
 
         tabla_frame = ttk.Frame(contenedor)
         tabla_frame.pack(fill="both", expand=True)
-        columnas = ("nombre", "artista", "genero", "log")
+        columnas = ("nombre", "artista", "genero", "calificacion")
         self.tabla = ttk.Treeview(tabla_frame, columns=columnas, show="headings", selectmode="browse")
         self.tabla.heading("nombre", text="Canción")
         self.tabla.heading("artista", text="Artista")
         self.tabla.heading("genero", text="Género")
-        self.tabla.heading("log", text="Log / notas")
+        self.tabla.heading("calificacion", text="Calificación")
         self.tabla.column("nombre", width=190, minwidth=120)
         self.tabla.column("artista", width=160, minwidth=110)
         self.tabla.column("genero", width=120, minwidth=90)
-        self.tabla.column("log", width=330, minwidth=150)
+        self.tabla.column("calificacion", width=140, minwidth=110, anchor="center")
         scrollbar = ttk.Scrollbar(tabla_frame, orient="vertical", command=self.tabla.yview)
         self.tabla.configure(yscrollcommand=scrollbar.set)
         self.tabla.pack(side="left", fill="both", expand=True)
@@ -156,24 +202,100 @@ class BibliotecaMusical:
             "genero": self.genero.get(),
             "log": self.entrada_log.get("1.0", "end").strip(),
             "calificacion": float(self.calificacion.get()),
+            "imagen": self.imagen_seleccionada.as_posix() if self.imagen_seleccionada else "",
         }
+
+    def seleccionar_portada(self):
+        ruta_origen = filedialog.askopenfilename(
+            parent=self.root,
+            title="Elegir portada de la canción",
+            filetypes=(
+                ("Imágenes", "*.png *.jpg *.jpeg *.gif *.bmp *.webp"),
+                ("Todos los archivos", "*.*"),
+            ),
+        )
+        if not ruta_origen:
+            return
+
+        origen = Path(ruta_origen)
+        carpeta_portadas = Path(__file__).resolve().parent / "covers"
+        try:
+            with Image.open(origen) as imagen:
+                imagen.verify()
+            carpeta_portadas.mkdir(exist_ok=True)
+            destino = carpeta_portadas / f"{uuid.uuid4().hex}{origen.suffix.lower()}"
+            shutil.copy2(origen, destino)
+        except (OSError, shutil.Error) as error:
+            messagebox.showerror(
+                "No se pudo cargar la imagen",
+                f"Elige un archivo de imagen válido.\n\n{error}",
+                parent=self.root,
+            )
+            return
+
+        self.imagen_seleccionada = Path("covers") / destino.name
+        self._mostrar_portada(self.imagen_seleccionada)
+
+    def _mostrar_portada(self, ruta):
+        self.portada_canvas.delete("all")
+        if not ruta:
+            self.portada_photo = None
+            self.portada_canvas.create_text(70, 70, text="Sin portada", fill="#64748b")
+            return
+
+        ruta_imagen = Path(ruta)
+        if not ruta_imagen.is_absolute():
+            ruta_imagen = Path(__file__).resolve().parent / ruta_imagen
+        try:
+            with Image.open(ruta_imagen) as imagen:
+                imagen.thumbnail((140, 140))
+                self.portada_photo = ImageTk.PhotoImage(imagen.copy(), master=self.root)
+        except (OSError, ValueError):
+            self.portada_photo = None
+            self.portada_canvas.create_text(
+                70,
+                70,
+                text="Imagen no\ndisponible",
+                fill="#64748b",
+                justify="center",
+            )
+            return
+
+        self.portada_canvas.create_image(70, 70, image=self.portada_photo)
 
     def _set_calificacion(self, valor):
         self.calificacion.set(valor)
         self._actualizar_estrellas()
+
+    def _calificar_estrella(self, evento, indice):
+        mitad = evento.x < evento.widget.winfo_width() / 2
+        self._set_calificacion(indice + (0.5 if mitad else 1.0))
+        return "break"
 
     def _actualizar_estrellas(self):
         valor_actual = float(self.calificacion.get())
         self.calificacion_label.configure(text=f"{valor_actual:.1f} / 5")
 
         for indice, boton in enumerate(self.botones_estrellas):
-            valor_estrella = (indice + 1) / 2
-            if valor_actual >= valor_estrella:
+            inicio_estrella = float(indice)
+            if valor_actual >= inicio_estrella + 1:
                 boton.configure(text="★", bg="#fff7ed", fg="#fbbf24", relief="solid")
-            elif valor_actual >= valor_estrella - 0.5:
+            elif valor_actual >= inicio_estrella + 0.5:
                 boton.configure(text="⯨", bg="#fff7ed", fg="#fbbf24", relief="solid")
             else:
                 boton.configure(text="☆", bg="#f8fafc", fg="#cbd5e1", relief="flat")
+
+    def _formato_estrellas(self, valor):
+        valor = max(0.0, min(float(valor or 0), 5.0))
+        estrellas = []
+        for indice in range(5):
+            if valor >= indice + 1:
+                estrellas.append("★")
+            elif valor >= indice + 0.5:
+                estrellas.append("⯨")
+            else:
+                estrellas.append("☆")
+        return "".join(estrellas)
 
     def agregar_cancion(self):
         datos = self._datos_formulario()
@@ -244,7 +366,7 @@ class BibliotecaMusical:
                         cancion.get("nombre", ""),
                         cancion.get("artista", ""),
                         cancion.get("genero", ""),
-                        cancion.get("log", "") or "—",
+                        self._formato_estrellas(cancion.get("calificacion", 0)),
                     ),
                 )
             total = len(self.tabla.get_children())
@@ -267,6 +389,8 @@ class BibliotecaMusical:
         self.genero.set(cancion.get("genero", GENEROS[0]))
         self.entrada_log.delete("1.0", "end")
         self.entrada_log.insert("1.0", cancion.get("log", ""))
+        self.imagen_seleccionada = Path(cancion["imagen"]) if cancion.get("imagen") else None
+        self._mostrar_portada(self.imagen_seleccionada)
         self.calificacion.set(float(cancion.get("calificacion", 0.0)))
         self._actualizar_estrellas()
         self.estado.set("Canción seleccionada: edita sus datos y tocaq en guardar.")
@@ -278,6 +402,8 @@ class BibliotecaMusical:
         self.entrada_artista.delete(0, "end")
         self.genero.set(GENEROS[0])
         self.entrada_log.delete("1.0", "end")
+        self.imagen_seleccionada = None
+        self._mostrar_portada(None)
         self.calificacion.set(0.0)
         self._actualizar_estrellas()
         self.entrada_nombre.focus_set()
