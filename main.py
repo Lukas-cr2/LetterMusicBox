@@ -1,11 +1,8 @@
 import re
-import shutil
-import uuid
 from pathlib import Path
 import tkinter as tk
-from tkinter import filedialog, messagebox, ttk
+from tkinter import messagebox, ttk
 
-from PIL import Image, ImageTk
 from pymongo import MongoClient
 from pymongo.errors import PyMongoError, ServerSelectionTimeoutError
 from bson import ObjectId
@@ -25,8 +22,6 @@ class BibliotecaMusical:
         self.root.minsize(760, 560)
         self.root.configure(bg="#f3f5f9")
         self.cancion_seleccionada = None
-        self.imagen_seleccionada = None
-        self.portada_photo = None
 
         # MongoDB se ejecuta localmente y esto lo hizo la ia asi que no lo toquen
         self.cliente = MongoClient(MONGODB_URI, serverSelectionTimeoutMS=2000)
@@ -102,28 +97,10 @@ class BibliotecaMusical:
 
         calificacion_frame = ttk.Frame(formulario)
         calificacion_frame.grid(row=2, column=4, sticky="w", pady=(10, 0), padx=(12, 0))
-        self.portada_canvas = tk.Canvas(
-            calificacion_frame,
-            width=140,
-            height=140,
-            bg="#ffffff",
-            highlightthickness=1,
-            highlightbackground="#cbd5e1",
-        )
-        self.portada_canvas.pack(anchor="w")
-        self._mostrar_portada(None)
-        ttk.Button(
-            calificacion_frame,
-            text="Elegir portada",
-            command=self.seleccionar_portada,
-        ).pack(anchor="w", pady=(5, 0))
-
-        controles_calificacion = ttk.Frame(calificacion_frame)
-        controles_calificacion.pack(anchor="w", pady=(8, 0))
-        ttk.Label(controles_calificacion, text="Calificación:").pack(side="left", padx=(0, 6))
+        ttk.Label(calificacion_frame, text="Calificación:").pack(side="left", padx=(0, 6))
         self.calificacion = tk.DoubleVar(value=0.0)
         tk.Button(
-            controles_calificacion,
+            calificacion_frame,
             text="0",
             width=1,
             padx=1,
@@ -134,7 +111,7 @@ class BibliotecaMusical:
 
         for indice in range(5):
             boton = tk.Button(
-            controles_calificacion,
+                calificacion_frame,
                 text="☆",
                 width=2,
                 relief="flat",
@@ -148,7 +125,7 @@ class BibliotecaMusical:
             boton.pack(side="left", padx=1)
             self.botones_estrellas.append(boton)
 
-        self.calificacion_label = ttk.Label(controles_calificacion, text="0.0 / 5")
+        self.calificacion_label = ttk.Label(calificacion_frame, text="0.0 / 5")
         self.calificacion_label.pack(side="left", padx=(10, 0))
         self._actualizar_estrellas()
 
@@ -202,66 +179,7 @@ class BibliotecaMusical:
             "genero": self.genero.get(),
             "log": self.entrada_log.get("1.0", "end").strip(),
             "calificacion": float(self.calificacion.get()),
-            "imagen": self.imagen_seleccionada.as_posix() if self.imagen_seleccionada else "",
         }
-
-    def seleccionar_portada(self):
-        ruta_origen = filedialog.askopenfilename(
-            parent=self.root,
-            title="Elegir portada de la canción",
-            filetypes=(
-                ("Imágenes", "*.png *.jpg *.jpeg *.gif *.bmp *.webp"),
-                ("Todos los archivos", "*.*"),
-            ),
-        )
-        if not ruta_origen:
-            return
-
-        origen = Path(ruta_origen)
-        carpeta_portadas = Path(__file__).resolve().parent / "covers"
-        try:
-            with Image.open(origen) as imagen:
-                imagen.verify()
-            carpeta_portadas.mkdir(exist_ok=True)
-            destino = carpeta_portadas / f"{uuid.uuid4().hex}{origen.suffix.lower()}"
-            shutil.copy2(origen, destino)
-        except (OSError, shutil.Error) as error:
-            messagebox.showerror(
-                "No se pudo cargar la imagen",
-                f"Elige un archivo de imagen válido.\n\n{error}",
-                parent=self.root,
-            )
-            return
-
-        self.imagen_seleccionada = Path("covers") / destino.name
-        self._mostrar_portada(self.imagen_seleccionada)
-
-    def _mostrar_portada(self, ruta):
-        self.portada_canvas.delete("all")
-        if not ruta:
-            self.portada_photo = None
-            self.portada_canvas.create_text(70, 70, text="Sin portada", fill="#64748b")
-            return
-
-        ruta_imagen = Path(ruta)
-        if not ruta_imagen.is_absolute():
-            ruta_imagen = Path(__file__).resolve().parent / ruta_imagen
-        try:
-            with Image.open(ruta_imagen) as imagen:
-                imagen.thumbnail((140, 140))
-                self.portada_photo = ImageTk.PhotoImage(imagen.copy(), master=self.root)
-        except (OSError, ValueError):
-            self.portada_photo = None
-            self.portada_canvas.create_text(
-                70,
-                70,
-                text="Imagen no\ndisponible",
-                fill="#64748b",
-                justify="center",
-            )
-            return
-
-        self.portada_canvas.create_image(70, 70, image=self.portada_photo)
 
     def _set_calificacion(self, valor):
         self.calificacion.set(valor)
@@ -389,8 +307,6 @@ class BibliotecaMusical:
         self.genero.set(cancion.get("genero", GENEROS[0]))
         self.entrada_log.delete("1.0", "end")
         self.entrada_log.insert("1.0", cancion.get("log", ""))
-        self.imagen_seleccionada = Path(cancion["imagen"]) if cancion.get("imagen") else None
-        self._mostrar_portada(self.imagen_seleccionada)
         self.calificacion.set(float(cancion.get("calificacion", 0.0)))
         self._actualizar_estrellas()
         self.estado.set("Canción seleccionada: edita sus datos y tocaq en guardar.")
@@ -402,8 +318,6 @@ class BibliotecaMusical:
         self.entrada_artista.delete(0, "end")
         self.genero.set(GENEROS[0])
         self.entrada_log.delete("1.0", "end")
-        self.imagen_seleccionada = None
-        self._mostrar_portada(None)
         self.calificacion.set(0.0)
         self._actualizar_estrellas()
         self.entrada_nombre.focus_set()
