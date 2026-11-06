@@ -9,6 +9,15 @@
 
 Las portadas elegidas se copian a la carpeta `covers/`; MongoDB guarda la ruta de cada imagen junto a la canción. Esa carpeta contiene archivos locales y no se incluye en Git.
 
+## Ejecutar la versión web
+
+1. Instala las dependencias con `python -m pip install -r requirements.txt`.
+2. Inicia MongoDB local.
+3. Ejecuta `python webapp.py`.
+4. Abre <http://127.0.0.1:5000> en el navegador.
+
+La versión web usa la misma base `lettermusicbox` y colección `canciones` que la aplicación de escritorio. Las portadas se guardan en `imagenes_canciones/`, compartida con `page.py`, y no se incluyen en Git. Por defecto, el servidor solo escucha en tu computadora. Para publicarla en internet hace falta desplegar el backend y configurar una base de datos accesible desde ese servidor; no publiques MongoDB directamente. Puedes configurar la conexión con la variable de entorno `MONGODB_URI`.
+
 _hola profe como anda? este es nuestro repositorio github_
 
 _nuestro plan es hacer __LetterMusicBox__ asi que veamos como va_

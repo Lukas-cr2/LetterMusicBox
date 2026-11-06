@@ -23,6 +23,7 @@ DATABASE_NAME = "lettermusicbox"
 COLLECTION_NAME = "canciones"
 GENEROS = ("Rock", "Pop", "Rap", "Electrónica")
 TAMANO_MAXIMO_IMAGEN = 5 * 1024 * 1024
+MAXIMO_CARACTERES_LOG = 5000
 
 
 class _SinRedirecciones(HTTPRedirectHandler):
@@ -210,14 +211,22 @@ class BibliotecaMusical:
     def _datos_formulario(self):
         nombre = self.entrada_nombre.get().strip()
         artista = self.entrada_artista.get().strip()
+        log = self.entrada_log.get("1.0", "end").strip()
         if not nombre or not artista:
             messagebox.showwarning("Oye, y perry?", "Completa el nombre de la canción y el artista.", parent=self.root)
+            return None
+        if len(log) > MAXIMO_CARACTERES_LOG:
+            messagebox.showwarning(
+                "Log demasiado largo",
+                f"El log puede tener como máximo {MAXIMO_CARACTERES_LOG} caracteres.",
+                parent=self.root,
+            )
             return None
         return {
             "nombre": nombre,
             "artista": artista,
             "genero": self.genero.get(),
-            "log": self.entrada_log.get("1.0", "end").strip(),
+            "log": log,
             "calificacion": float(self.calificacion.get()),
         }
 

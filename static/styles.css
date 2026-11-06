@@ -1,0 +1,415 @@
+:root {
+  color-scheme: light;
+  --ink: #202938;
+  --muted: #64748b;
+  --blue: #253b73;
+  --paper: #fff;
+  --canvas: #f3f5f9;
+  --line: #e2e8f0;
+  --gold: #fbbf24;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--canvas);
+  color: var(--ink);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+.shell {
+  width: min(1120px, calc(100% - 36px));
+  margin: 0 auto;
+  padding: 38px 0 64px;
+}
+
+.page-header,
+.section-heading,
+.filters,
+.form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.page-header {
+  margin-bottom: 26px;
+}
+
+.page-header h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+.page-header h1 {
+  margin-bottom: 4px;
+  color: #172554;
+  font-size: clamp(2rem, 5vw, 2.8rem);
+  letter-spacing: -0.05em;
+}
+
+.subtitle,
+.eyebrow,
+.song-count,
+.image-note {
+  color: var(--muted);
+}
+
+.subtitle {
+  margin-bottom: 0;
+}
+
+.eyebrow {
+  margin-bottom: 6px;
+  font-size: 0.72rem;
+  font-weight: 750;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.logo {
+  width: 76px;
+  height: 76px;
+  object-fit: contain;
+}
+
+.panel,
+.song-card {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--paper);
+  box-shadow: 0 8px 26px rgb(15 23 42 / 4%);
+}
+
+.panel {
+  padding: 24px;
+}
+
+.section-heading {
+  margin-bottom: 18px;
+}
+
+.section-heading h2 {
+  margin-bottom: 0;
+  color: #172554;
+  font-size: 1.35rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+label {
+  display: grid;
+  gap: 7px;
+  color: #334155;
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+
+input:not([type="range"]):not([type="checkbox"]),
+select,
+textarea {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 9px 11px;
+  background: #fff;
+  color: var(--ink);
+}
+
+textarea {
+  resize: vertical;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus-visible {
+  outline: 3px solid rgb(59 130 246 / 25%);
+  outline-offset: 1px;
+}
+
+.rating-field input {
+  width: 100%;
+  accent-color: var(--blue);
+}
+
+.rating-field output {
+  display: inline;
+  margin-left: 4px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.log-field {
+  grid-column: 1;
+}
+
+.image-field {
+  grid-column: 2;
+  grid-row: 3 / span 2;
+  align-content: start;
+}
+
+.image-field input[type="file"] {
+  max-width: 100%;
+  font-size: 0.82rem;
+}
+
+.image-note {
+  font-size: 0.78rem;
+  font-weight: 400;
+}
+
+.image-preview {
+  width: 110px;
+  height: 92px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.remove-image {
+  display: flex;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+}
+
+.form-actions {
+  justify-content: flex-start;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.button {
+  min-height: 40px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 9px 14px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.button-primary {
+  background: var(--blue);
+  color: white;
+}
+
+.button-primary:hover {
+  background: #1e3262;
+}
+
+.button-quiet {
+  border-color: var(--line);
+  background: #fff;
+  color: #334155;
+}
+
+.button-quiet:hover {
+  background: #f8fafc;
+}
+
+.library {
+  margin-top: 38px;
+}
+
+.library-heading {
+  margin-bottom: 14px;
+}
+
+.song-count {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.filters {
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.search-field {
+  flex: 1;
+}
+
+.filters label:last-child {
+  width: min(220px, 42%);
+}
+
+.status {
+  min-height: 1.4em;
+  margin: 8px 0 12px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.status.error {
+  color: #b91c1c;
+}
+
+.song-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(245px, 1fr));
+  gap: 14px;
+}
+
+.song-card {
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr);
+  gap: 14px;
+  padding: 15px;
+}
+
+.cover,
+.cover-placeholder {
+  width: 76px;
+  height: 76px;
+  border-radius: 10px;
+  background: #eef2ff;
+  object-fit: cover;
+}
+
+.cover-placeholder {
+  display: grid;
+  place-items: center;
+  color: #52628c;
+  font-size: 1.4rem;
+  font-weight: 800;
+}
+
+.song-info {
+  min-width: 0;
+}
+
+.song-info h3 {
+  overflow: hidden;
+  margin: 1px 0 3px;
+  font-size: 1rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.song-artist,
+.song-genre {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.song-stars {
+  margin: 8px 0 0;
+  color: #d97706;
+  font-size: 0.95rem;
+  letter-spacing: 0.03em;
+}
+
+.song-log {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: #475569;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.card-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.card-actions button {
+  border: 0;
+  border-radius: 6px;
+  padding: 6px 9px;
+  background: #f1f5f9;
+  color: #334155;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 650;
+}
+
+.card-actions button:hover {
+  background: #e2e8f0;
+}
+
+.card-actions .delete-button {
+  color: #b91c1c;
+}
+
+.empty-state {
+  grid-column: 1 / -1;
+  padding: 36px 16px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.hidden,
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+.hidden {
+  display: none !important;
+}
+
+@media (max-width: 640px) {
+  .shell {
+    width: min(100% - 24px, 520px);
+    padding-top: 24px;
+  }
+
+  .panel {
+    padding: 18px;
+  }
+
+  .logo {
+    width: 58px;
+    height: 58px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .log-field,
+  .image-field {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .filters {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .filters label:last-child {
+    width: 100%;
+  }
+}
