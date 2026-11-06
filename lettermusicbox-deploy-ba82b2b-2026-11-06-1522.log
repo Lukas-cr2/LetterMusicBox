@@ -1,0 +1,57 @@
+2026-11-06T18:22:35.938853092Z ==> Cloning from https://github.com/Lukas-cr2/LetterMusicBox
+2026-11-06T18:22:41.735621585Z ==> Checking out commit ba82b2b97471da5f0dd362a2f85833a28379f292 in branch main
+2026-11-06T18:22:42.997797281Z ==> Using Python version 3.14.10 (default)
+2026-11-06T18:22:42.997803363Z ==> Docs on specifying a Python version: https://render.com/docs/python-version
+2026-11-06T18:22:42.997937102Z ==> Installing Python version 3.14.10...
+2026-11-06T18:22:48.947476843Z ==> Using Poetry version 2.1.3 (default)
+2026-11-06T18:22:48.992660273Z ==> Docs on specifying a Poetry version: https://render.com/docs/poetry-version
+2026-11-06T18:22:49.047459582Z ==> Running build command 'pip install -r requirements.txt'...
+2026-11-06T18:22:49.882775272Z Collecting pymongo (from -r requirements.txt (line 1))
+2026-11-06T18:22:49.967368921Z   Downloading pymongo-4.19.0-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (10 kB)
+2026-11-06T18:22:50.133069144Z Collecting Pillow (from -r requirements.txt (line 2))
+2026-11-06T18:22:50.142647616Z   Downloading pillow-13.0.0-cp314-cp314-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.1 kB)
+2026-11-06T18:22:50.165809564Z Collecting Flask (from -r requirements.txt (line 3))
+2026-11-06T18:22:50.175007731Z   Downloading flask-3.1.3-py3-none-any.whl.metadata (3.2 kB)
+2026-11-06T18:22:50.19191758Z Collecting dnspython<3.0.0,>=2.7.0 (from pymongo->-r requirements.txt (line 1))
+2026-11-06T18:22:50.201473697Z   Downloading dnspython-2.9.2-py3-none-any.whl.metadata (5.8 kB)
+2026-11-06T18:22:50.217950993Z Collecting blinker>=1.9.0 (from Flask->-r requirements.txt (line 3))
+2026-11-06T18:22:50.228598557Z   Downloading blinker-1.9.0-py3-none-any.whl.metadata (1.6 kB)
+2026-11-06T18:22:50.246796531Z Collecting click>=8.1.3 (from Flask->-r requirements.txt (line 3))
+2026-11-06T18:22:50.255883122Z   Downloading click-8.5.1-py3-none-any.whl.metadata (2.6 kB)
+2026-11-06T18:22:50.271334455Z Collecting itsdangerous>=2.2.0 (from Flask->-r requirements.txt (line 3))
+2026-11-06T18:22:50.281687411Z   Downloading itsdangerous-2.2.0-py3-none-any.whl.metadata (1.9 kB)
+2026-11-06T18:22:50.300632861Z Collecting jinja2>=3.1.2 (from Flask->-r requirements.txt (line 3))
+2026-11-06T18:22:50.310256982Z   Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+2026-11-06T18:22:50.358956317Z Collecting markupsafe>=2.1.1 (from Flask->-r requirements.txt (line 3))
+2026-11-06T18:22:50.368410983Z   Downloading markupsafe-3.0.4-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+2026-11-06T18:22:50.388601148Z Collecting werkzeug>=3.1.0 (from Flask->-r requirements.txt (line 3))
+2026-11-06T18:22:50.397977339Z   Downloading werkzeug-3.1.9-py3-none-any.whl.metadata (4.1 kB)
+2026-11-06T18:22:50.415548812Z Downloading pymongo-4.19.0-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (1.1 MB)
+2026-11-06T18:22:50.45567533Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.1/1.1 MB 50.4 MB/s  0:00:00
+2026-11-06T18:22:50.465113542Z Downloading dnspython-2.9.2-py3-none-any.whl (360 kB)
+2026-11-06T18:22:50.476546361Z Downloading pillow-13.0.0-cp314-cp314-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (7.1 MB)
+2026-11-06T18:22:50.507566708Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 7.1/7.1 MB 236.6 MB/s  0:00:00
+2026-11-06T18:22:50.517324539Z Downloading flask-3.1.3-py3-none-any.whl (103 kB)
+2026-11-06T18:22:50.527900127Z Downloading blinker-1.9.0-py3-none-any.whl (8.5 kB)
+2026-11-06T18:22:50.538964438Z Downloading click-8.5.1-py3-none-any.whl (126 kB)
+2026-11-06T18:22:50.549733299Z Downloading itsdangerous-2.2.0-py3-none-any.whl (16 kB)
+2026-11-06T18:22:50.560404794Z Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+2026-11-06T18:22:50.570798871Z Downloading markupsafe-3.0.4-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (23 kB)
+2026-11-06T18:22:50.581295357Z Downloading werkzeug-3.1.9-py3-none-any.whl (228 kB)
+2026-11-06T18:22:50.636241895Z Installing collected packages: Pillow, markupsafe, itsdangerous, dnspython, click, blinker, werkzeug, pymongo, jinja2, Flask
+2026-11-06T18:22:51.922063522Z 
+2026-11-06T18:22:51.923402889Z Successfully installed Flask-3.1.3 Pillow-13.0.0 blinker-1.9.0 click-8.5.1 dnspython-2.9.2 itsdangerous-2.2.0 jinja2-3.1.6 markupsafe-3.0.4 pymongo-4.19.0 werkzeug-3.1.9
+2026-11-06T18:22:51.924062978Z 
+2026-11-06T18:22:51.924071608Z [notice] A new release of pip is available: 26.2.2 -> 26.3
+2026-11-06T18:22:51.924074293Z [notice] To update, run: pip install --upgrade pip
+2026-11-06T18:22:53.048468918Z ==> Uploading build...
+2026-11-06T18:23:01.783122422Z ==> Uploaded in 6.9s. Compression took 1.8s
+2026-11-06T18:23:01.786133973Z ==> Build successful 🎉
+2026-11-06T18:23:02.613960027Z ==> Deploying...
+2026-11-06T18:23:02.692029081Z ==> Setting WEB_CONCURRENCY=1 by default, based on available CPUs in the instance
+2026-11-06T18:23:15.520949778Z ==> Running 'gunnicorn "app:crear_app()"'
+2026-11-06T18:23:15.590758183Z bash: line 1: gunnicorn: command not found
+2026-11-06T18:23:16.516815873Z ==> Exited with status 127
+2026-11-06T18:23:16.519530431Z ==> Common ways to troubleshoot your deploy: https://render.com/docs/troubleshooting-deploys
+2026-11-06T18:23:22.229286099Z ==> Running 'gunnicorn "app:crear_app()"'
+2026-11-06T18:23:22.32339904Z bash: line 1: gunnicorn: command not found

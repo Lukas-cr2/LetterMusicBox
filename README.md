@@ -18,6 +18,15 @@ Las portadas elegidas se copian a la carpeta `covers/`; MongoDB guarda la ruta d
 
 La versión web usa la misma base `lettermusicbox` y colección `canciones` que la aplicación de escritorio. Las portadas se guardan en `imagenes_canciones/`, compartida con `page.py`, y no se incluyen en Git. Por defecto, el servidor solo escucha en tu computadora. Para publicarla en internet hace falta desplegar el backend y configurar una base de datos accesible desde ese servidor; no publiques MongoDB directamente. Puedes configurar la conexión con la variable de entorno `MONGODB_URI`.
 
+### Desplegar en Render
+
+Configura el servicio web con estos comandos:
+
+- **Build Command:** `pip install -r requirements.txt`
+- **Start Command:** `gunicorn --bind 0.0.0.0:$PORT webapp:app`
+
+En **Environment**, configura `MONGODB_URI` con la URI de una base MongoDB accesible desde Render. La app Flask se exporta como `app` en `webapp.py`.
+
 _hola profe como anda? este es nuestro repositorio github_
 
 _nuestro plan es hacer __LetterMusicBox__ asi que veamos como va_
